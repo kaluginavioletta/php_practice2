@@ -1,0 +1,25 @@
+{
+    "name": "kaluginavioletta/php_practice2",
+    "description": "MVC",
+    "type": "project",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "kaluginavioletta",
+            "email": "kalugina7bk.ru@yandex.ru"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "php": ">=7.0.0 | ^8.0",
+        "nikic/fast-route": "v1.x-dev",
+        "illuminate/database": "8.x-dev",
+        "illuminate/events": "8.x-dev"
+    },
+    "autoload": {
+        "psr-4": {
+            "Src\\": "core/Src/",
+            "": "app/"
+        }
+    }
+}
