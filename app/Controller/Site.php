@@ -19,13 +19,35 @@ class Site
     public function index(Request $request): string
     {
         $employees = Employee::all(); // Получаем всех пользователей
+        $posts = Post::all();
+        $compositions = Composition::all();
+
+        // Проверяем, было ли отправлено значение подразделения
+        if (!empty($_POST['check_unit'])) {
+            $selectedUnit = $_POST['check_unit'];
+
+            $employees = Employee::where('id_unit', $selectedUnit)->get();
+        }
+
+        if (!empty($_POST['check_unit'])) {
+            $selectedUnits = (array)$_POST['check_unit']; // Преобразование в массив
+
+            $employees = Employee::whereIn('id_unit', $selectedUnits)->get();
+
+            // Расчет среднего возраста
+            $averageAge = $employees->avg('dob');
+        }
+
+        if (!empty($_POST['id_composition'])) {
+            $selectedComposition = $_POST['id_composition'];
+            $employees = Employee::whereIn('id_composition', $selectedComposition)->get();
+        }
 
         $units = Unit::all();
 
-        $compositions = Composition::all();
-
-        return new View('site.index', ['employees' => $employees, 'units' => $units, 'compositions' => $compositions, 'title' => 'Главная']);
+        return new View('site.index', ['employees' => $employees, 'posts' => $posts, 'units' => $units, 'compositions' => $compositions, 'selectedUnit' => $selectedUnit, 'selectedUnits' => $selectedUnits, 'averageAge' => $averageAge, 'title' => 'Главная']);
     }
+
     public function post(Request $request): string
     {
 
@@ -90,54 +112,39 @@ class Site
         $genders = ['Мужской', 'Женский']; // Массив с вариантами пола
 
         if ($request->method === 'POST') {
-            $data = $request->all();
 
-            $image = $request->all()['img'];
-            $image_name = $image['name'];
-            $tmp_image = $image['tmp_name'];
-            $img_ex = pathinfo($image_name, PATHINFO_EXTENSION);
+            $employees = $request->all();
 
-            $new_path = __DIR__ . '/images/';
-            if (!file_exists($new_path)) {
-                mkdir($new_path, 0777, true);
+            $employees['check_unit'] = isset($employees->check_unit) ? 0 : null;
+
+            if ($_FILES['img']) {
+                $img = $_FILES['img'];
+                $root = app()->settings->getRootPath();
+                $path_img = $_SERVER['DOCUMENT_ROOT'] . $root . '../../public/images/';
+                $name_img = mt_rand(0, 1000) . $img['name'];
+
+                // Переместим загруженный файл в папку с изображениями
+                move_uploaded_file($img['tmp_name'], $path_img . $name_img);
+
+                $employees['img'] = $name_img;
+
+                if (Employee::create($employees)) {
+                    app()->route->redirect('/');
+                }
+            } else {
+                // Обработка ошибки загрузки файла
+                echo "Ошибка при загрузке файла";
             }
-            $new_image_name = uniqid("IMG-", true) . '.' . $img_ex;
-            $file_path = $new_path . $new_image_name; // Полный путь к файлу
 
-            move_uploaded_file($tmp_image, $file_path);
-
-            // Проверяем наличие обязательных полей
-            if (!isset($data['id_post']) || !isset($data['id_unit']) || !isset($data['id_composition'])) {
-                // Возвращаем ошибку или выполняем необходимые действия
-                return 'Необходимые поля не заполнены';
-            }
-
-            // Создаем массив данных для сохранения
-            $employeeData = [
-                'id_post' => $data['id_post'],
-                'id_unit' => $data['id_unit'],
-                'id_composition' => $data['id_composition'],
-                'surname' => $data['surname'],
-                'name' => $data['name'],
-                'patronymic' => $data['patronymic'],
-                'gender' => $data['gender'],
-                'dob' => $data['dob'],
-                'address' => $data['address'],
-                'img' => $file_path // Используем полный путь к файлу
-            ];
-
-            // Сохраняем данные в БД
-            Employee::create($employeeData);
-
-            app()->route->redirect('/');
-        } else {
-            $posts = Post::all();
-            $units = Unit::all();
-            $compositions = Composition::all();
-
-            return new View('site.employee', ['title' => 'Новый сотрудник', 'genders' => $genders, 'posts' => $posts, 'units' => $units, 'compositions' => $compositions]);
         }
+
+        $posts = Post::all();
+        $units = Unit::all();
+        $compositions = Composition::all();
+
+        return new View('site.employee', ['title' => 'Новый сотрудник', 'genders' => $genders, 'posts' => $posts, 'units' => $units, 'compositions' => $compositions]);
     }
+
     public function composition(Request $request): string
     {
         if ($request->method === 'POST' && Composition::create($request->all())) {
@@ -167,21 +174,24 @@ class Site
         return new View('site.view' , ['title' => 'Вид подразделения']);
     }
 
-    public function search(Request $request)
+    public function search(Request $request): string
     {
-        $cooperator = Employee::all();
+        $query = $_GET['query']; // Получение значения из параметра запроса
 
-        if ($request->method === 'GET') {
-            $var = $request->all();
-            if (isset($var['query']) && !empty($var['query'])) {
-                $employeeID = $var['query'];
-                $filtereEmployee = Employee::whereRaw("LOWER(surname) LIKE ?", ["%{$employeeID}%"])->get();
-                return new View('site.search', ['filteredEmployers' => $filtereEmployee]);
-            }
-        }
-        return new View('site.search', ['cooperator' => $cooperator]);
+        // Разделение введенного значения на отдельные части ФИО
+        $parts = explode(' ', $query);
+        $surname = $parts[0] ?? ''; // Фамилия
+        $name = $parts[1] ?? ''; // Имя
+        $patronymic = $parts[2] ?? ''; // Отчество
+
+        $filteredEmployees = Employee::where(function($query) use ($surname, $name, $patronymic) {
+            $query->where('surname', 'like', '%'.$surname.'%')
+                ->where('name', 'like', '%'.$name.'%')
+                ->where('patronymic', 'like', '%'.$patronymic.'%');
+        })->get(); // Фильтрация сотрудников по ФИО
+
+        return new View('site.search', ['filteredEmployees' => $filteredEmployees]);
     }
-
     public function logout(): void
     {
         Auth::logout();
