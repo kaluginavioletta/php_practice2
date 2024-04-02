@@ -9,9 +9,8 @@ class EmployeeMiddleware
 {
     public function handle(Request $request)
     {
-        //Если пользователь не авторизован, то редирект на страницу входа
         if (!Auth::userEmployee()) {
-            app()->route->redirect('/signup');
+            app()->route->redirect('/login');
         }
     }
 }
