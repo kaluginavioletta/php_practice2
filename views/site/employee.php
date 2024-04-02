@@ -31,7 +31,6 @@
                         <?php endforeach; ?>
                     </select>
                 </label>
-                <a href="<?= app()->route->getUrl('/post') ?>">+</a>
             </div>
 
 
@@ -68,7 +67,6 @@
                         <?php endforeach; ?>
                     </select>
                 </label>
-                <a href="<?= app()->route->getUrl('/composition') ?>">+</a>
             </div>
 
     <div style="margin-bottom: 10px">
