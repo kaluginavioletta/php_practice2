@@ -11,7 +11,7 @@ class EmployeeMiddleware
     {
         //Если пользователь не авторизован, то редирект на страницу входа
         if (!Auth::userEmployee()) {
-            app()->route->redirect('/login');
+            app()->route->redirect('/signup');
         }
     }
 }
