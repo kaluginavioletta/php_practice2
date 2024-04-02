@@ -1,1 +1,0 @@
-<h2 style="margin-top: 25px;"><?= $message ?? ''; ?></h2>
