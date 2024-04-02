@@ -51,6 +51,22 @@ class Auth
         return false;
     }
 
+    public static function userAdmin(): bool
+    {
+        if (self::$user->userRole() == 1) {
+            return true;
+        }
+        return false;
+    }
+
+    public static function userEmployee(): bool
+    {
+        if (self::$user->userRole() == 2) {
+            return true;
+        }
+        return false;
+    }
+
     //Выход текущего пользователя
     public static function logout(): bool
     {

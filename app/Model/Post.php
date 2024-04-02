@@ -14,9 +14,12 @@ class Post extends Model
     protected $fillable = [
         'post_name',
     ];
+<<<<<<< HEAD
 
     public function getPost()
     {
         return "{$this->post_name}";
     }
+=======
+>>>>>>> f7fdead (2 done)
 }

@@ -12,6 +12,10 @@ class Employee extends Model
 
     public $timestamps = false;
     protected $fillable = [
+<<<<<<< HEAD
+=======
+        'login',
+>>>>>>> f7fdead (2 done)
         'surname',
         'name',
         'patronymic',
@@ -37,13 +41,27 @@ class Employee extends Model
         return $this->id;
     }
 
+<<<<<<< HEAD
 
     public function post()
     {
         return $this->belongsTo(Post::class, 'id_post');
     }
+=======
+>>>>>>> f7fdead (2 done)
     public function composition()
     {
         return $this->belongsTo(Composition::class, 'id_composition');
     }
+<<<<<<< HEAD
+=======
+
+    public function search($query)
+    {
+        return self::where('surname', 'LIKE', '%'.$query.'%')
+            ->orWhere('name', 'LIKE', '%'.$query.'%')
+            ->orWhere('patronymic', 'LIKE', '%'.$query.'%')
+            ->get();
+    }
+>>>>>>> f7fdead (2 done)
 }

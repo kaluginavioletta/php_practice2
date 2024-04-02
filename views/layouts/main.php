@@ -9,6 +9,7 @@
 </head>
 <body style="margin: 0; padding: 0; background-color: #2158fdcc;">
 <header>
+<<<<<<< HEAD
     <nav style="position: relative; display: flex; gap: 15px; align-items: center; justify-content: space-around; margin-bottom: 50px;">
         <?php
             if (app()->auth::user()->id_role === 1) :
@@ -25,14 +26,36 @@
                     <button type="submit" style="-webkit-writing-mode: horizontal-tb !important; -webkit-appearance: button; border-color: rgb(216, 216, 216) rgb(209, 209, 209) rgb(186, 186, 186); border-style: solid; border-width: 1px; padding: 1px 7px 2px; text-rendering: auto; color: initial; display: inline-block; margin: 0em; font: 400 11px system-ui; border-radius: 15px; text-align: center; background-color: #3f39f7; width: 110px; height: 20px;"><a href="#" style="color: white; text-decoration: none;">Искать</button>
                 </form>
                 <a href="<?= app()->route->getUrl('/logout') ?>" style="color: white; text-decoration: none;">Выход (<?= app()->auth::user()->name ?>)</a>
+=======
+    <nav style="display: block; position: relative; display: flex; gap: 15px; align-items: center; justify-content: space-around; margin-bottom: 50px;">
+        <?php
+            if (app()->auth::user()->id_role === 1) :
+                ?>
+                <a href="<?= app()->route->getUrl('/logout') ?>">Выход (<?= app()->auth::user()->name ?>)</a>
+            <?php
+            elseif (app()->auth::user()->id_role === 2) :
+                ?>
+                <a href="<?= app()->route->getUrl('/') ?>">Главная</a>
+                <a href="<?= app()->route->getUrl('/employee') ?>">Добавить сотрудника</a>
+                <a href="<?= app()->route->getUrl('/unit') ?>">Добавить подразделение</a>
+                <a href="<?= app()->route->getUrl('/logout') ?>">Выход (<?= app()->auth::user()->name ?>)</a>
+>>>>>>> f7fdead (2 done)
             <?php
             endif;
             ?>
     </nav>
 </header>
+<<<<<<< HEAD
 <main style="margin-left: 100px;">
+=======
+<main style="display: flex; flex-wrap: wrap; margin-left: 100px;">
+>>>>>>> f7fdead (2 done)
     <?= $content ?? '' ?>
 </main>
 
 </body>
+<<<<<<< HEAD
 </html>
+=======
+</html>
+>>>>>>> f7fdead (2 done)

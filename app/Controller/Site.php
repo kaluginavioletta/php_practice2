@@ -20,6 +20,7 @@ class Site
     {
         $employees = Employee::all(); // Получаем всех пользователей
 
+<<<<<<< HEAD
         $units = Unit::all();
 
         $compositions = Composition::all();
@@ -37,6 +38,33 @@ class Site
 
         return new View('site.post' , ['title' => 'Должность', 'posts' => $posts]);
 
+=======
+        return new View('site.index', ['employees' => $employees , 'title' => 'Главная']);
+    }
+    public function post(Request $request): string
+    {
+        $message = '';
+        $posts = Post::all(); // Получаем все должности
+
+        if ($request->method === 'POST') {
+            $postData = $request->all();
+
+            // Пытаемся создать должность
+            try {
+                $posts = Post::create($postData);
+                app()->route->redirect('/post');
+            } catch (\Illuminate\Database\QueryException $exception) {
+                $errorCode = $exception->errorInfo[1];
+                if ($errorCode == 1452) {
+                    $message = 'Ошибка при связи с другими таблицами. Убедитесь, что выбранная должность уже существует.';
+                } else {
+                    $message = 'Произошла ошибка при добавлении должности: ' . $exception->getMessage();
+                }
+            }
+        }
+
+        return new View('site.post', ['message' => $message, 'posts' => $posts->toArray()]);
+>>>>>>> f7fdead (2 done)
     }
     public function signup(Request $request): string
     {
@@ -92,6 +120,7 @@ class Site
         if ($request->method === 'POST') {
             $data = $request->all();
 
+<<<<<<< HEAD
             $image = $request->all()['img'];
             $image_name = $image['name'];
             $tmp_image = $image['tmp_name'];
@@ -125,6 +154,23 @@ class Site
                 'address' => $data['address'],
                 'img' => $file_path // Используем полный путь к файлу
             ];
+=======
+            $image = $request->all()['image'];
+            $image_name = $image['name'];
+            $tmp_image = $image['tmp_name'] ;
+            $img_ex = pathinfo($image_name, PATHINFO_EXTENSION);
+
+            $new_path = 'images/';
+            $new_image_name = uniqid("IMG-", true) . '.' . $img_ex;
+            move_uploaded_file($tmp_image, $new_path . $new_image_name);
+
+            $employeeData = $request->all();
+            $employeeData['image'] = $new_path . $new_image_name;
+            $employeeData['id_post'] = $employeeData['id_post'] ?? null;
+            $employeeData['id_unit'] = $employeeData['id_unit'] ?? null;
+            $employeeData['id_composition'] = $employeeData['id_composition'] ?? null;
+            $employeeData['img'] = $employeeData['img'] ?? '';
+>>>>>>> f7fdead (2 done)
 
             // Сохраняем данные в БД
             Employee::create($employeeData);
@@ -167,6 +213,7 @@ class Site
         return new View('site.view' , ['title' => 'Вид подразделения']);
     }
 
+<<<<<<< HEAD
     public function search(Request $request)
     {
         $cooperator = Employee::all();
@@ -182,6 +229,8 @@ class Site
         return new View('site.search', ['cooperator' => $cooperator]);
     }
 
+=======
+>>>>>>> f7fdead (2 done)
     public function logout(): void
     {
         Auth::logout();

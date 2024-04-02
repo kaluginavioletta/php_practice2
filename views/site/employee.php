@@ -1,7 +1,12 @@
+<<<<<<< HEAD
 <form method="post" enctype="multipart/form-data" style="display: flex; flex-direction: column; align-items: center; justify-content: center; color: white; background-color: #3c6af7; width: 360px; margin-left: auto; margin-right: auto; height: 530px; border-radius: 15px;">
     <input name="csrf_token" type="hidden" value="<?= app()->auth::generateCSRF() ?>"/>
     <h2>Новый сотрудник</h2>
     <h3 style="margin-bottom: 0"><?= $message ?? ''; ?></h3>
+<form method="post" enctype="multipart/form-data" style="display: flex; flex-direction: column; align-items: center; justify-content: center; color: white; background-color: #3c6af7; width: 360px; margin-left: auto; margin-right: auto; height: 520px; border-radius: 15px;">
+    <h3><?= $message ?? ''; ?></h3>
+    <input name="csrf_token" type="hidden" value="<?= app()->auth::generateCSRF() ?>"/>
+    <h2>Новый сотрудник</h2>
     <input type="text" name="surname" placeholder="Фамилия" style="margin-bottom: 15px;">
     <input type="text" name="name" placeholder="Имя" style="margin-bottom: 15px;">
     <input type="text" name="patronymic" placeholder="Отчество" style="margin-bottom: 15px;">
@@ -28,6 +33,7 @@
                     <select id="id_post" name="id_post">
                         <?php foreach ($posts as $post): ?>
                             <option value="<?= $post->id_post ?>"><?= $post->getPost() ?></option>
+                            <option value="<?= $post['id_post'] ?>"><?= $post['post_name'] ?></option>
                         <?php endforeach; ?>
                     </select>
                 </label>
