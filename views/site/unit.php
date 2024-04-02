@@ -12,7 +12,6 @@
                 <?php endforeach; ?>
             </select>
         </label>
-        <a href="<?= app()->route->getUrl('/view') ?>">+</a>
     </div>
 
     <button style="width: 95px; margin-bottom: 10px; -webkit-writing-mode: horizontal-tb !important; -webkit-appearance: button; border-color: rgb(216, 216, 216) rgb(209, 209, 209) rgb(186, 186, 186); border-style: solid; border-width: 1px; padding: 1px 7px 2px; text-rendering: auto; color: initial; display: inline-block; text-align: start; margin: 0em; font: 400 11px system-ui; border-radius: 15px; text-align: center; background-color: #3f39f7; color: white;">Добавить</button>
