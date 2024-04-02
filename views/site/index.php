@@ -3,7 +3,7 @@
         ?>
         <div style="margin-bottom: 40px; display: flex; flex-direction: row-reverse; gap: 15px; margin-right: 30px; align-items: center;">
 
-            <form id="unitForm" method="POST">
+            <form id="compositionForm" method="POST" action="<?= app()->route->getUrl('/') ?>">
                 <div class="css-modal-details">
                     <details>
                         <summary>По составу</summary>
@@ -11,7 +11,7 @@
                             <div class="cmt">
                                 <input name="csrf_token" type="hidden" value="<?= app()->auth::generateCSRF() ?>"/>
                                 <?php foreach ($compositions as $composition): ?>
-                                    <input type="radio" name="unit" value="<?= $composition['id_composition'] ?>"> <?= $composition['name'] ?><br>
+                                    <input type="radio" name="id_composition[]" value="<?= $composition['id_composition'] ?>"> <?= $composition['name'] ?><br>
                                 <?php endforeach; ?>
                                 <button type="submit">Отправить</button>
                             </div>
@@ -20,7 +20,8 @@
                 </div>
             </form>
 
-            <form method="POST">
+
+            <form id="unitsForm" method="POST" action="<?= app()->route->getUrl('/') ?>">
                 <div class="css-modal-details">
                     <details>
                         <summary>По подразделениям</summary>
@@ -28,16 +29,16 @@
                             <div class="cmt">
                                 <input name="csrf_token" type="hidden" value="<?= app()->auth::generateCSRF() ?>"/>
                                 <?php foreach ($units as $unit): ?>
-                                    <input type="checkbox" name="units[]" value="<?= $unit['id_unit'] ?>"> <?= $unit['unit_name'] ?><br>
+                                    <input type="checkbox" name="check_unit[]" value="<?= $unit['id_unit'] ?>"> <?= $unit['unit_name'] ?><br>
                                 <?php endforeach; ?>
-                                <button type="submit">Отправить</button>
+                                <button type="submit" name="filter">Отправить</button>
                             </div>
                         </div>
                     </details>
                 </div>
             </form>
 
-            <form id="unitForm" method="POST">
+            <form id="unitForm" method="POST" action="<?= app()->route->getUrl('/') ?>">
                 <div class="css-modal-details">
                     <details>
                         <summary>По подразделению</summary>
@@ -45,7 +46,7 @@
                             <div class="cmt">
                                 <input name="csrf_token" type="hidden" value="<?= app()->auth::generateCSRF() ?>"/>
                                 <?php foreach ($units as $unit): ?>
-                                    <input type="radio" name="unit" value="<?= $unit['id_unit'] ?>"> <?= $unit['unit_name'] ?><br>
+                                    <input type="radio" name="check_unit" value="<?= $unit['id_unit'] ?>"> <?= $unit['unit_name'] ?><br>
                                 <?php endforeach; ?>
                                 <button type="submit">Отправить</button>
                             </div>
@@ -56,7 +57,7 @@
         </div>
     <?php endif; ?>
 </div>
-<div style="display: flex;">
+<div style="display: flex; flex-wrap: wrap;">
     <?php foreach ($employees as $employee) { ?>
         <div style="background-color: #2771ffa1; display: flex; flex-direction: column; width: 500px; margin-left: 50px; margin-bottom: 200px; position: relative; align-items: baseline; border-radius: 20px; border: 1px solid #2947ec;">
             <div style="display: flex; background-color: #678dff; width: 300px; align-items: center; margin-top: 20px; margin-left: auto; margin-right: auto; text-align: center;">
@@ -68,32 +69,14 @@
                 <h4>Пол: <?= $employee->gender ?></h4>
                 <h4>Дата рождения: <?= $employee->dob ?></h4>
                 <h4>Адрес прописки: <?= $employee->address ?></h4>
-                <h4>Должность: <?= $employee->post()->post_name ?></h4>
-                <h4>Прикрепление к подразделению: <?= $employee->id_unit->name ?></h4>
-                <img src="<?= $employee->img ?>" alt="<?= $employee->surname ?>" style="max-width: 100px; max-height: 100px;">
+                <h4>Должность: <?= $employee->post->getPost() ?></h4> <!-- Получение конкретной должности для данного сотрудника -->
+<!--                --><?php //if ($employee->check_unit): ?>
+                    <h4>Подразделение: <?= $employee->unit->unit_name ?></h4> <!-- Получение названия подразделения для данного сотрудника -->
+<!--                --><?php //endif; ?>
+                <img src="../../public/images/<?= $employee->img ?>" alt="<?= $employee->surname ?>" style="max-width: 100px; max-height: 100px;">
             </div>
         </div>
     <?php } ?>
-</div>
-
-
-<div>
-    <?php
-    if (isset($_GET['query'])) {
-        $query = $_GET['query'];
-        $results = \Model\Employee::search($query);
-
-        if ($results->isEmpty()) {
-            echo 'Ничего не найдено.';
-        } else {
-            echo '<ul>';
-            foreach ($results as $result) {
-                echo '<li>' . $result->surname . ' ' . $result->name . ' ' . $result->patronymic . '</li>';
-            }
-            echo '</ul>';
-        }
-    }
-    ?>
 </div>
 
 <style>
@@ -246,16 +229,3 @@
         }
     }
 </style>
-
-<script>
-    const checkboxes = document.querySelectorAll('input[type="checkbox"]');
-    checkboxes.forEach((checkbox) => {
-        checkbox.addEventListener('click', function() {
-            checkboxes.forEach((c) => {
-                if (c !== this) {
-                    c.checked = false;
-                }
-            });
-        });
-    });
-</script>
