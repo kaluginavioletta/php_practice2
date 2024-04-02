@@ -14,12 +14,8 @@ class User extends Model implements IdentityInterface
     protected $fillable = [
         'name',
         'login',
-<<<<<<< HEAD
-        'password'
-=======
         'password',
         'id_role'
->>>>>>> f7fdead (2 done)
     ];
 
     protected static function booted()
@@ -42,18 +38,15 @@ class User extends Model implements IdentityInterface
         return $this->id;
     }
 
-<<<<<<< HEAD
-=======
-    public function userRole(): ?int
-    {
-        return $this->id_role ?? null;
-    }
-
->>>>>>> f7fdead (2 done)
     //Возврат аутентифицированного пользователя
     public function attemptIdentity(array $credentials)
     {
         return self::where(['login' => $credentials['login'],
             'password' => md5($credentials['password'])])->first();
+    }
+
+    public function userRole(): ?int
+    {
+        return $this->id_role ?? null;
     }
 }
