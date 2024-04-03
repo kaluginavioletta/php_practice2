@@ -11,7 +11,7 @@ class AdminMiddleware
     {
         //Если пользователь не авторизован, то редирект на страницу входа
         if (!Auth::userAdmin()) {
-            app()->route->redirect('/');
+            app()->route->redirect('/login');
         }
     }
 }
