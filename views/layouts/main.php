@@ -23,7 +23,7 @@
             <form method="GET" action="<?= app()->route->getUrl('/search') ?>">
                 <input name="csrf_token" type="hidden" value="<?= app()->auth::generateCSRF() ?>"/>
                 <input type="text" name="query" placeholder="Поиск по ФИО">
-                <button type="submit" style="-webkit-writing-mode: horizontal-tb !important; -webkit-appearance: button; border-color: rgb(216, 216, 216) rgb(209, 209, 209) rgb(186, 186, 186); border-style: solid; border-width: 1px; padding: 1px 7px 2px; text-rendering: auto; color: initial; display: inline-block; margin: 0em; font: 400 11px system-ui; border-radius: 15px; text-align: center; background-color: #3f39f7; width: 110px; height: 20px;"><a href="#" style="color: white; text-decoration: none;">Искать</button>
+                <button type="submit" style="-webkit-writing-mode: horizontal-tb !important; -webkit-appearance: button; border-color: rgb(216, 216, 216) rgb(209, 209, 209) rgb(186, 186, 186); border-style: solid; border-width: 1px; padding: 1px 7px 2px; text-rendering: auto; color: initial; display: inline-block; margin: 0em; font: 400 11px system-ui; border-radius: 15px; text-align: center; background-color: #3f39f7; width: 110px; height: 20px;">Искать</button>
             </form>
             <a href="<?= app()->route->getUrl('/logout') ?>" style="color: white; text-decoration: none;">Выход (<?= app()->auth::user()->name ?>)</a>
         <?php
