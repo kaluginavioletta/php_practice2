@@ -1,8 +1,8 @@
-<div style="display: flex; flex-direction: row-reverse; gap: 15px; margin-right: 30px;">
+<div style="display: flex; justify-content: space-between; gap: 15px; margin-right: 30px;">
     <?php if (app()->auth::user()->id_role === 2) :
         ?>
+        <h3><?= $averageAge ?></h3>
         <div style="margin-bottom: 40px; display: flex; flex-direction: row-reverse; gap: 15px; margin-right: 30px; align-items: center;">
-
             <form id="compositionForm" method="POST" action="<?= app()->route->getUrl('/') ?>">
                 <div class="css-modal-details">
                     <details>
@@ -65,15 +65,17 @@
                 <h3><?= $employee->name ?></h3>&nbsp;
                 <h3><?= $employee->patronymic ?></h3>&nbsp;
             </div>
-            <div style="margin-left: 20px">
-                <h4>Пол: <?= $employee->gender ?></h4>
-                <h4>Дата рождения: <?= $employee->dob ?></h4>
-                <h4>Адрес прописки: <?= $employee->address ?></h4>
-                <h4>Должность: <?= $employee->post->getPost() ?></h4>
-                <?php if ($employee->check_unit): ?>
-                    <h4>Подразделение: <?= $employee->unit->unit_name ?></h4>
-                <?php endif; ?>
-                <div>
+            <div style="display: flex; gap: 150px;">
+                <div style="margin-left: 20px">
+                    <h4>Пол: <?= $employee->gender ?></h4>
+                    <h4>Дата рождения: <?= $employee->dob ?></h4>
+                    <h4>Адрес прописки: <?= $employee->address ?></h4>
+                    <h4>Должность: <?= $employee->post->getPost() ?></h4>
+                    <?php if ($employee->check_unit): ?>
+                        <h4>Подразделение: <?= $employee->unit->unit_name ?></h4>
+                    <?php endif; ?>
+                </div>
+                <div style="margin-top: 90px;">
                     <?php if (!empty($employee->img)): ?>
                         <img src="/php_practice2/public/images/<?= $employee->img ?>" alt="<?= $employee->surname ?>" style="max-width: 100px; max-height: 100px;">
                     <?php endif; ?>
