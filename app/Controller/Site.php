@@ -14,6 +14,8 @@ use Src\Request;
 use Src\Validator\Validator;
 use Src\Auth\Auth;
 use Illuminate\Http\UploadedFile;
+use Carbon\Carbon;
+use middlewares;
 class Site
 {
     public function index(Request $request): string
@@ -29,13 +31,24 @@ class Site
             $employees = Employee::where('id_unit', $selectedUnit)->get();
         }
 
-        if (!empty($_POST['check_unit'])) {
-            $selectedUnits = (array)$_POST['check_unit']; // Преобразование в массив
+        if (!empty($_POST['check_unit']) && is_array($_POST['check_unit'])) {
+            $selectedUnits = $_POST['check_unit'];
 
             $employees = Employee::whereIn('id_unit', $selectedUnits)->get();
 
             // Расчет среднего возраста
-            $averageAge = $employees->avg('dob');
+            $totalAge = 0;
+            $count = 0;
+
+            foreach ($employees as $employee) {
+                $dob = Carbon::parse($employee->dob);
+                $totalAge += $dob->age;
+                $count++;
+            }
+
+            $averageAge = 'Средний возраст: ' . ($count > 0 ? $totalAge / $count : 0);
+        } else {
+            $averageAge = ''; // Сбросить средний возраст, если подразделения не выбраны
         }
 
         if (!empty($_POST['id_composition'])) {
@@ -115,7 +128,7 @@ class Site
 
             $employees = $request->all();
 
-            $employees['check_unit'] = isset($request->check_unit) ? 1 : 0;
+            $employees['check_unit'] = isset($_POST['check_unit']) ? 1 : 0;
 
             if ($_FILES['img']) {
                 $img = $_FILES['img'];
