@@ -1,6 +1,6 @@
-<form method="post" style="display: flex; flex-direction: column; align-items: center; justify-content: center; color: white; background-color: #3c6af7; width: 250px; margin-left: auto; margin-right: auto; height: 170px; border-radius: 15px;">
+<form method="post" style="display: flex; flex-direction: column; align-items: center; justify-content: center; color: white; background-color: #3c6af7; width: 320px; margin-left: auto; margin-right: auto; height: 250px; border-radius: 15px;">
     <h2 style="text-align: center; margin-bottom: -20px;">Подразделение</h2>
-    <h3><?= $message ?? ''; ?></h3>
+    <h3 style="margin-top: 40px; width: 215px; text-align: center;"><?= $message ?? ''; ?></h3>
     <input name="csrf_token" type="hidden" value="<?= app()->auth::generateCSRF() ?>"/>
     <input type="text" name="unit_name" placeholder="Название" style="margin-bottom: 15px;">
 
