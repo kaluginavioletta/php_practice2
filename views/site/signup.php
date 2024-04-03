@@ -1,6 +1,6 @@
-<form method="post" style="display: flex; flex-direction: column; align-items: center; justify-content: center; color: white; background-color: #3c6af7; width: 360px; margin-left: auto; margin-right: auto; height: 230px; border-radius: 15px;">
-    <h2 style="text-align: center; margin-bottom: -15px; width: 200px;">Новый сотрудник отдела кадров</h2>
-    <pre><?= $message ?? ''; ?></pre>
+<form method="post" style="display: flex; flex-direction: column; align-items: center; justify-content: center; color: white; background-color: #3c6af7; width: 320px; margin-left: auto; margin-right: auto; height: 400px; border-radius: 15px;">
+<h2 style="text-align: center; margin-bottom: -15px; width: 200px;">Новый сотрудник отдела кадров</h2>
+    <h3 style="margin-top: 40px; width: 215px;"><?= $message ?? ''; ?></h3>
     <input name="csrf_token" type="hidden" value="<?= app()->auth::generateCSRF() ?>"/>
     <input type="text" name="name" placeholder="Имя" style="margin-bottom: 15px;">
     <input type="text" name="login" placeholder="Логин" style="margin-bottom: 15px;">
