@@ -1,7 +1,7 @@
-<form method="post" enctype="multipart/form-data" style="display: flex; flex-direction: column; align-items: center; justify-content: center; color: white; background-color: #3c6af7; width: 360px; margin-left: auto; margin-right: auto; height: 530px; border-radius: 15px;">
+<form method="post" enctype="multipart/form-data" style="display: flex; flex-direction: column; align-items: center; justify-content: center; color: white; background-color: #3c6af7; width: 360px; margin-left: auto; margin-right: auto; height: 580px; border-radius: 15px;">
     <input name="csrf_token" type="hidden" value="<?= app()->auth::generateCSRF() ?>"/>
     <h2>Новый сотрудник</h2>
-    <h3 style="margin-bottom: 0"><?= $message ?? ''; ?></h3>
+    <h3 style="text-align: center; margin-bottom: 20px"><?= $message ?? ''; ?></h3>
     <input type="text" name="surname" placeholder="Фамилия" style="margin-bottom: 15px;">
     <input type="text" name="name" placeholder="Имя" style="margin-bottom: 15px;">
     <input type="text" name="patronymic" placeholder="Отчество" style="margin-bottom: 15px;">
