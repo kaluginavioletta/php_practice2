@@ -14,7 +14,9 @@
         "php": ">=7.0.0 | ^8.0",
         "nikic/fast-route": "v1.x-dev",
         "illuminate/database": "8.x-dev",
-        "illuminate/events": "8.x-dev"
+        "illuminate/events": "8.x-dev",
+        "kaluginavioletta/collect": "dev-main",
+        "kaluginavioletta/middlewares": "dev-main"
     },
     "autoload": {
         "psr-4": {
