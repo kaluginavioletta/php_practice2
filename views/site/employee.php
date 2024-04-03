@@ -20,59 +20,59 @@
     <label style="margin-bottom: 10px;">Изображение <input type="file" name="img"></label>
 
     <?php
-        if (app()->auth::user()->id_role === 2):
-    ?>
+    if (app()->auth::user()->id_role === 2):
+        ?>
 
-            <div style="margin-bottom: 10px">
-                <label for="id_post">Должность
-                    <select id="id_post" name="id_post">
-                        <?php foreach ($posts as $post): ?>
-                            <option value="<?= $post->id_post ?>"><?= $post->getPost() ?></option>
-                        <?php endforeach; ?>
-                    </select>
-                </label>
-            </div>
+        <div style="margin-bottom: 10px">
+            <label for="id_post">Должность
+                <select id="id_post" name="id_post">
+                    <?php foreach ($posts as $post): ?>
+                        <option value="<?= $post->id_post ?>"><?= $post->getPost() ?></option>
+                    <?php endforeach; ?>
+                </select>
+            </label>
+        </div>
 
 
     <?php
-        elseif (app()->auth::user()->id_role === 1):
-    ?>
+    elseif (app()->auth::user()->id_role === 1):
+        ?>
 
-    <div style="margin-top: 10px">
-        <input type="password" name="password" placeholder="Пароль" style="margin-bottom: 15px;">
-    </div>
-        <?php endif; ?>
+        <div style="margin-top: 10px">
+            <input type="password" name="password" placeholder="Пароль" style="margin-bottom: 15px;">
+        </div>
+    <?php endif; ?>
 
     <?php
-        if (app()->auth::user()->id_role === 2) :
-    ?>
+    if (app()->auth::user()->id_role === 2) :
+        ?>
 
-    <div style="margin-bottom: 10px">
-        <label for="id_unit">Подразделение
-            <select id="id_unit" name="id_unit">
-                <?php foreach ($units as $unit): ?>
-                    <option value="<?= $unit['id_unit'] ?>"><?= $unit['unit_name'] ?></option>
-                <?php endforeach; ?>
-            </select>
-        </label>
-        <a href="<?= app()->route->getUrl('/unit') ?>">+</a>
-    </div>
+        <div style="margin-bottom: 10px">
+            <label for="id_unit">Подразделение
+                <select id="id_unit" name="id_unit">
+                    <?php foreach ($units as $unit): ?>
+                        <option value="<?= $unit['id_unit'] ?>"><?= $unit['unit_name'] ?></option>
+                    <?php endforeach; ?>
+                </select>
+            </label>
+            <a href="<?= app()->route->getUrl('/unit') ?>">+</a>
+        </div>
 
 
-            <div style="margin-bottom: 10px">
-                <label for="id_composition">Состав
-                    <select id="id_composition" name="id_composition">
-                        <?php foreach ($compositions as $composition): ?>
-                            <option value="<?= $composition->id_composition ?>"><?= $composition->getComposition() ?></option>
-                        <?php endforeach; ?>
-                    </select>
-                </label>
-            </div>
+        <div style="margin-bottom: 10px">
+            <label for="id_composition">Состав
+                <select id="id_composition" name="id_composition">
+                    <?php foreach ($compositions as $composition): ?>
+                        <option value="<?= $composition->id_composition ?>"><?= $composition->getComposition() ?></option>
+                    <?php endforeach; ?>
+                </select>
+            </label>
+        </div>
 
-    <div style="margin-bottom: 10px">
-        <label><input type="checkbox" name="check_unit" style="margin-bottom: 15px;">Прикрепить к подразделению</label>
-    </div>
-        <?php endif; ?>
+        <div style="margin-bottom: 10px">
+            <label><input type="checkbox" name="check_unit" style="margin-bottom: 15px;">Прикрепить к подразделению</label>
+        </div>
+    <?php endif; ?>
 
     <button style="width: 95px; margin-bottom: 10px; -webkit-writing-mode: horizontal-tb !important; -webkit-appearance: button; border-color: rgb(216, 216, 216) rgb(209, 209, 209) rgb(186, 186, 186); border-style: solid; border-width: 1px; padding: 1px 7px 2px; text-rendering: auto; color: initial; display: inline-block; text-align: start; margin: 0em; font: 400 11px system-ui; border-radius: 15px; text-align: center; background-color: #3f39f7; color: white;">Добавить</button>
 </form>
