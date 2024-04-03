@@ -115,13 +115,13 @@ class Site
 
             $employees = $request->all();
 
-            $employees['check_unit'] = isset($employees->check_unit) ? 0 : null;
+            $employees['check_unit'] = isset($request->check_unit) ? 1 : 0;
 
             if ($_FILES['img']) {
                 $img = $_FILES['img'];
                 $root = app()->settings->getRootPath();
                 $path_img = $_SERVER['DOCUMENT_ROOT'] . $root . '../../public/images/';
-                $name_img = mt_rand(0, 1000) . $img['name'];
+                $name_img = $img['name'];
 
                 // Переместим загруженный файл в папку с изображениями
                 move_uploaded_file($img['tmp_name'], $path_img . $name_img);
