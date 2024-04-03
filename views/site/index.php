@@ -69,11 +69,15 @@
                 <h4>Пол: <?= $employee->gender ?></h4>
                 <h4>Дата рождения: <?= $employee->dob ?></h4>
                 <h4>Адрес прописки: <?= $employee->address ?></h4>
-                <h4>Должность: <?= $employee->post->getPost() ?></h4> <!-- Получение конкретной должности для данного сотрудника -->
-<!--                --><?php //if ($employee->check_unit): ?>
-                    <h4>Подразделение: <?= $employee->unit->unit_name ?></h4> <!-- Получение названия подразделения для данного сотрудника -->
-<!--                --><?php //endif; ?>
-                <img src="../../public/images/<?= $employee->img ?>" alt="<?= $employee->surname ?>" style="max-width: 100px; max-height: 100px;">
+                <h4>Должность: <?= $employee->post->getPost() ?></h4>
+                <?php if ($employee->check_unit): ?>
+                    <h4>Подразделение: <?= $employee->unit->unit_name ?></h4>
+                <?php endif; ?>
+                <div>
+                    <?php if (!empty($employee->img)): ?>
+                        <img src="/php_practice2/public/images/<?= $employee->img ?>" alt="<?= $employee->surname ?>" style="max-width: 100px; max-height: 100px;">
+                    <?php endif; ?>
+                </div>
             </div>
         </div>
     <?php } ?>
