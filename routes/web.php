@@ -8,7 +8,6 @@ Route::add(['GET', 'POST'], '/post', [Controller\Site::class, 'post'])->middlewa
 Route::add(['GET', 'POST'], '/composition', [Controller\Site::class, 'composition'])->middleware('employee');
 Route::add(['GET', 'POST'], '/unit', [Controller\Site::class, 'unit'])->middleware('employee');
 Route::add(['GET', 'POST'], '/search', [Controller\Site::class, 'search'])->middleware('auth');
-Route::add(['GET', 'POST'], '/view', [Controller\Site::class, 'view'])->middleware('employee');
 Route::add(['GET', 'POST'], '/signup', [Controller\Site::class, 'signup'])->middleware('admin');
 Route::add(['GET', 'POST'], '/login', [Controller\Site::class, 'login']);
 Route::add('GET', '/logout', [Controller\Site::class, 'logout']);
