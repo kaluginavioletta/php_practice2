@@ -120,7 +120,7 @@ class Site
             if ($_FILES['img']) {
                 $img = $_FILES['img'];
                 $root = app()->settings->getRootPath();
-                $path_img = $_SERVER['DOCUMENT_ROOT'] . $root . '../../public/images/';
+                $path_img = $_SERVER['DOCUMENT_ROOT'] . $root . '/public/images/';
                 $name_img = $img['name'];
 
                 // Переместим загруженный файл в папку с изображениями
