@@ -64,19 +64,6 @@ class Site
 
         return new View('site.index', ['employees' => $employees, 'posts' => $posts, 'units' => $units, 'compositions' => $compositions, 'selectedUnit' => $selectedUnit, 'selectedUnits' => $selectedUnits, 'averageAge' => $averageAge, 'title' => 'Главная']);
     }
-
-    public function post(Request $request): string
-    {
-
-        if ($request->method === 'POST' && Post::create($request->all())) {
-            app()->route->redirect('/post');
-        }
-
-        $posts = Post::all();
-
-        return new View('site.post' , ['title' => 'Должность', 'posts' => $posts]);
-
-    }
     public function signup(Request $request): string
     {
         if ($request->method === 'POST') {
