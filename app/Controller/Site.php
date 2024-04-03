@@ -16,6 +16,10 @@ use Src\Auth\Auth;
 use Illuminate\Http\UploadedFile;
 use Carbon\Carbon;
 use middlewares;
+use Validators\CompositionValidator;
+use Validators\EmployeeValidator;
+use Validators\UnitValidator;
+
 class Site
 {
     public function index(Request $request): string
@@ -126,6 +130,12 @@ class Site
 
         if ($request->method === 'POST') {
 
+            $validator = new EmployeeValidator();
+            if (!$validator->validate($request->all())) {
+                // Handle validation errors
+                return new View('site.employee', ['title' => 'Новый сотрудник', 'genders' => $genders, 'message' => $validator->getMessage()]);
+            }
+
             $employees = $request->all();
 
             $employees['check_unit'] = isset($_POST['check_unit']) ? 1 : 0;
@@ -155,36 +165,45 @@ class Site
         $units = Unit::all();
         $compositions = Composition::all();
 
-        return new View('site.employee', ['title' => 'Новый сотрудник', 'genders' => $genders, 'posts' => $posts, 'units' => $units, 'compositions' => $compositions]);
+        return new View('site.employee', ['title' => 'Новый сотрудник', 'message' => $message, 'genders' => $genders, 'posts' => $posts, 'units' => $units, 'compositions' => $compositions]);
     }
 
     public function composition(Request $request): string
     {
-        if ($request->method === 'POST' && Composition::create($request->all())) {
-            app()->route->redirect('/composition');
+        $message = '';
+
+        if ($request->method === 'POST') {
+            $validator = new CompositionValidator();
+
+            if ($validator->validate($request->all()) && Composition::create($request->all())) {
+                app()->route->redirect('/composition');
+            } else {
+                $message = $validator->getMessage();
+            }
         }
 
         $compositions = Composition::all();
 
-        return new View('site.composition' , ['title' => 'Состав', 'compositions' => $compositions]);
+        return new View('site.composition', ['title' => 'Состав', 'compositions' => $compositions, 'message' => $message]);
     }
+
     public function unit(Request $request): string
     {
-        if ($request->method === 'POST' && Unit::create($request->all())) {
-            app()->route->redirect('/unit');
+        $message = '';
+
+        if ($request->method === 'POST') {
+            $validator = new UnitValidator();
+
+            if ($validator->validate($request->all()) && Unit::create($request->all())) {
+                app()->route->redirect('/unit');
+            } else {
+                $message = $validator->getMessage();
+            }
         }
 
         $views = \Model\View::all();
 
-        return new View('site.unit' , ['title' => 'Подразделение', 'views' => $views]);
-    }
-
-    public function view(Request $request): string
-    {
-        if ($request->method === 'POST' && \Model\View::create($request->all())) {
-            app()->route->redirect('/view');
-        }
-        return new View('site.view' , ['title' => 'Вид подразделения']);
+        return new View('site.unit', ['title' => 'Подразделение', 'views' => $views, 'message' => $message]);
     }
 
     public function search(Request $request): string
