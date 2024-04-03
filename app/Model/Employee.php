@@ -40,10 +40,10 @@ class Employee extends Model
 
     public function post()
     {
-        return $this->belongsTo(Post::class, 'id_post');
+        return $this->belongsTo(Post::class, 'id_post', 'id_post');
     }
     public function composition()
     {
-        return $this->belongsTo(Composition::class, 'id_composition');
+        return $this->belongsTo(Composition::class, 'id_composition', 'id_composition');
     }
 }
