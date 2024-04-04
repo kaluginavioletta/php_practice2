@@ -12,6 +12,7 @@ return [
     ],
     'validators' => [
         'required' => Validators\RequireValidator::class,
+        'age' => Validators\AgeValidator::class,
         'unique' => Validators\UniqueValidator::class
     ],
     'routeAppMiddleware' => [
