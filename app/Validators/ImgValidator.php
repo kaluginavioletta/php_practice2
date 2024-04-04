@@ -2,11 +2,11 @@
 
 namespace Validators;
 
-class ImgValidator
-{
-    private $message = '';
+use Src\Validator\AbstractValidator;
 
-    public function validate(array $data): bool
+class ImgValidator extends AbstractValidator
+{
+    public function rule(): bool
     {
 
         if (isset($_FILES['img']) && !empty($_FILES['img']['name'])) {
