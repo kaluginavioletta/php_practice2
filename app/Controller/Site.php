@@ -16,8 +16,9 @@ use Src\Auth\Auth;
 use Illuminate\Http\UploadedFile;
 use Carbon\Carbon;
 use middlewares;
+use Validators\AgeValidator;
 use Validators\CompositionValidator;
-use Validators\EmployeeValidator;
+use Validators\ImgValidator;
 use Validators\UnitValidator;
 
 class Site
@@ -117,10 +118,25 @@ class Site
 
         if ($request->method === 'POST') {
 
-            $validator = new EmployeeValidator();
-            if (!$validator->validate($request->all())) {
-                // Handle validation errors
-                return new View('site.employee', ['title' => 'Новый сотрудник', 'genders' => $genders, 'message' => $validator->getMessage()]);
+            $validator = new Validator($request->all(), [
+                'surname' => ['required'],
+                'name' => ['required'],
+                'dob' => ['required', 'age'],
+                'address' => ['required'],
+            ],
+                [
+                    'required' => 'Поле :field пустое',
+                    'age' => 'Поле :field возраст должен быть от 18 до 65',
+                ]);
+
+            if ($validator->fails()) {
+                return new View('site.employee',
+                    ['message' => json_encode($validator->errors(), JSON_UNESCAPED_UNICODE)]);
+            }
+
+            $imgvalidator = new ImgValidator();
+            if (!$imgvalidator->validate($request->all())) {
+                return new View('site.employee', ['title' => 'Новый сотрудник', 'genders' => $genders, 'message' => $imgvalidator->getMessage()]);
             }
 
             $employees = $request->all();
@@ -152,7 +168,7 @@ class Site
         $units = Unit::all();
         $compositions = Composition::all();
 
-        return new View('site.employee', ['title' => 'Новый сотрудник', 'message' => $message, 'genders' => $genders, 'posts' => $posts, 'units' => $units, 'compositions' => $compositions]);
+        return new View('site.employee', ['title' => 'Новый сотрудник', 'genders' => $genders, 'posts' => $posts, 'units' => $units, 'compositions' => $compositions]);
     }
 
     public function composition(Request $request): string
