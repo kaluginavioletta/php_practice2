@@ -5,7 +5,7 @@ namespace Validators;
 class ImgValidator
 {
     private $message = '';
-//
+
     public function validate(array $data): bool
     {
 
