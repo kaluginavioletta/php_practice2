@@ -16,7 +16,8 @@
         "illuminate/database": "8.x-dev",
         "illuminate/events": "8.x-dev",
         "kaluginavioletta/collect": "dev-main",
-        "kaluginavioletta/middlewares": "dev-main"
+        "kaluginavioletta/middlewares": "dev-main",
+        "kaluginavioletta/request": "dev-main"
     },
     "autoload": {
         "psr-4": {
