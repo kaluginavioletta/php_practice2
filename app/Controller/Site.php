@@ -16,11 +16,6 @@ use Src\Auth\Auth;
 use Illuminate\Http\UploadedFile;
 use Carbon\Carbon;
 use middlewares;
-use Validators\AgeValidator;
-use Validators\CompositionValidator;
-use Validators\ImgValidator;
-use Validators\UnitValidator;
-use Search\Search;
 class Site
 {
     public function index(Request $request): string
@@ -64,6 +59,19 @@ class Site
         $units = Unit::all();
 
         return new View('site.index', ['employees' => $employees, 'posts' => $posts, 'units' => $units, 'compositions' => $compositions, 'selectedUnit' => $selectedUnit, 'selectedUnits' => $selectedUnits, 'averageAge' => $averageAge, 'title' => 'Главная']);
+    }
+
+    public function post(Request $request): string
+    {
+
+        if ($request->method === 'POST' && Post::create($request->all())) {
+            app()->route->redirect('/post');
+        }
+
+        $posts = Post::all();
+
+        return new View('site.post' , ['title' => 'Должность', 'posts' => $posts]);
+
     }
     public function signup(Request $request): string
     {
@@ -118,29 +126,11 @@ class Site
 
         if ($request->method === 'POST') {
 
-            $validator = new Validator($request->all(), [
-                'surname' => ['required'],
-                'name' => ['required'],
-                'dob' => ['required', 'age'],
-                'address' => ['required'],
-                'img' => ['img']
-            ],
-                [
-                    'required' => 'Поле :field пустое',
-                    'age' => 'Поле :field возраст должен быть от 18 до 65',
-                    'img' => 'Изображение :field большого формата'
-                ]);
-
-            if ($validator->fails()) {
-                return new View('site.employee',
-                    ['message' => json_encode($validator->errors(), JSON_UNESCAPED_UNICODE)]);
-            }
-
             $employees = $request->all();
 
             $employees['check_unit'] = isset($_POST['check_unit']) ? 1 : 0;
 
-            if (!empty($_FILES['img']['name'])) {
+            if ($_FILES['img']) {
                 $img = $_FILES['img'];
                 $root = app()->settings->getRootPath();
                 $path_img = $_SERVER['DOCUMENT_ROOT'] . $root . '/public/images/';
@@ -158,6 +148,7 @@ class Site
                 // Обработка ошибки загрузки файла
                 echo "Ошибка при загрузке файла";
             }
+
         }
 
         $posts = Post::all();
@@ -169,71 +160,37 @@ class Site
 
     public function composition(Request $request): string
     {
-        $message = '';
-
-        if ($request->method === 'POST') {
-            $validator = new Validator($request->all(), [
-                'name' => ['required'],
-            ], [
-                'required' => 'Поле :field пусто',
-            ]);
-
-            if ($validator->fails()) {
-                return new View('site.composition',
-                    ['message' => json_encode($validator->errors(), JSON_UNESCAPED_UNICODE)]);
-            }
+        if ($request->method === 'POST' && Composition::create($request->all())) {
+            app()->route->redirect('/composition');
         }
 
         $compositions = Composition::all();
 
-        return new View('site.composition', ['title' => 'Состав', 'compositions' => $compositions, 'message' => $message]);
+        return new View('site.composition' , ['title' => 'Состав', 'compositions' => $compositions]);
     }
-
     public function unit(Request $request): string
     {
-        $message = '';
-
-        if ($request->method === 'POST') {
-            $validator = new Validator($request->all(), [
-                'name' => ['required'],
-            ], [
-                'required' => 'Поле :field пусто',
-            ]);
-
-            if ($validator->fails()) {
-                return new View('site.composition',
-                    ['message' => json_encode($validator->errors(), JSON_UNESCAPED_UNICODE)]);
-            }
+        if ($request->method === 'POST' && Unit::create($request->all())) {
+            app()->route->redirect('/unit');
         }
 
         $views = \Model\View::all();
 
-        return new View('site.unit', ['title' => 'Подразделение', 'views' => $views, 'message' => $message]);
+        return new View('site.unit' , ['title' => 'Подразделение', 'views' => $views]);
     }
 
-//    public function search(Request $request): string
-//    {
-//        $query = $_GET['query']; // Получение значения из параметра запроса
-//
-//        // Разделение введенного значения на отдельные части ФИО
-//        $parts = explode(' ', $query);
-//        $surname = $parts[0] ?? ''; // Фамилия
-//        $name = $parts[1] ?? ''; // Имя
-//        $patronymic = $parts[2] ?? ''; // Отчество
-//
-//        $filteredEmployees = Employee::where(function($query) use ($surname, $name, $patronymic) {
-//            $query->where('surname', 'like', '%'.$surname.'%')
-//                ->where('name', 'like', '%'.$name.'%')
-//                ->where('patronymic', 'like', '%'.$patronymic.'%');
-//        })->get(); // Фильтрация сотрудников по ФИО
-//
-//        return new View('site.search', ['filteredEmployees' => $filteredEmployees]);
-//    }
+    public function view(Request $request): string
+    {
+        if ($request->method === 'POST' && \Model\View::create($request->all())) {
+            app()->route->redirect('/view');
+        }
+        return new View('site.view' , ['title' => 'Вид подразделения']);
+    }
+
     public function search(Request $request): string
     {
-        $query = $_GET['query']; // Получение значения из параметра запроса
+        $query = $_GET['query'];
 
-        // Разделение введенного значения на отдельные части ФИО
         $parts = explode(' ', $query);
         $surname = $parts[0] ?? ''; // Фамилия
         $name = $parts[1] ?? ''; // Имя
@@ -247,7 +204,6 @@ class Site
 
         return new View('site.search', ['filteredEmployees' => $filteredEmployees]);
     }
-
     public function logout(): void
     {
         Auth::logout();
