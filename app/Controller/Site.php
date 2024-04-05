@@ -126,11 +126,29 @@ class Site
 
         if ($request->method === 'POST') {
 
+            $validator = new Validator($request->all(), [
+                'surname' => ['required'],
+                'name' => ['required'],
+                'dob' => ['required', 'age'],
+                'address' => ['required'],
+                'img' => ['img']
+            ],
+                [
+                    'required' => 'Поле :field пустое',
+                    'age' => 'Поле :field возраст должен быть от 18 до 65',
+                    'img' => 'Изображение :field большого формата'
+                ]);
+
+            if ($validator->fails()) {
+                return new View('site.employee',
+                    ['message' => json_encode($validator->errors(), JSON_UNESCAPED_UNICODE)]);
+            }
+
             $employees = $request->all();
 
             $employees['check_unit'] = isset($_POST['check_unit']) ? 1 : 0;
 
-            if ($_FILES['img']) {
+            if (!empty($_FILES['img']['name'])) {
                 $img = $_FILES['img'];
                 $root = app()->settings->getRootPath();
                 $path_img = $_SERVER['DOCUMENT_ROOT'] . $root . '/public/images/';
@@ -148,7 +166,6 @@ class Site
                 // Обработка ошибки загрузки файла
                 echo "Ошибка при загрузке файла";
             }
-
         }
 
         $posts = Post::all();
