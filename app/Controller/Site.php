@@ -20,6 +20,7 @@ use Validators\AgeValidator;
 use Validators\CompositionValidator;
 use Validators\ImgValidator;
 use Validators\UnitValidator;
+use Search\Search;
 
 class Site
 {
@@ -172,12 +173,15 @@ class Site
         $message = '';
 
         if ($request->method === 'POST') {
-            $validator = new CompositionValidator();
+            $validator = new Validator($request->all(), [
+                'name' => ['required'],
+            ], [
+                'required' => 'Поле :field пусто',
+            ]);
 
-            if ($validator->validate($request->all()) && Composition::create($request->all())) {
-                app()->route->redirect('/composition');
-            } else {
-                $message = $validator->getMessage();
+            if ($validator->fails()) {
+                return new View('site.composition',
+                    ['message' => json_encode($validator->errors(), JSON_UNESCAPED_UNICODE)]);
             }
         }
 
@@ -191,12 +195,15 @@ class Site
         $message = '';
 
         if ($request->method === 'POST') {
-            $validator = new UnitValidator();
+            $validator = new Validator($request->all(), [
+                'name' => ['required'],
+            ], [
+                'required' => 'Поле :field пусто',
+            ]);
 
-            if ($validator->validate($request->all()) && Unit::create($request->all())) {
-                app()->route->redirect('/unit');
-            } else {
-                $message = $validator->getMessage();
+            if ($validator->fails()) {
+                return new View('site.composition',
+                    ['message' => json_encode($validator->errors(), JSON_UNESCAPED_UNICODE)]);
             }
         }
 
@@ -205,21 +212,30 @@ class Site
         return new View('site.unit', ['title' => 'Подразделение', 'views' => $views, 'message' => $message]);
     }
 
-    public function search(Request $request): string
+//    public function search(Request $request): string
+//    {
+//        $query = $_GET['query']; // Получение значения из параметра запроса
+//
+//        // Разделение введенного значения на отдельные части ФИО
+//        $parts = explode(' ', $query);
+//        $surname = $parts[0] ?? ''; // Фамилия
+//        $name = $parts[1] ?? ''; // Имя
+//        $patronymic = $parts[2] ?? ''; // Отчество
+//
+//        $filteredEmployees = Employee::where(function($query) use ($surname, $name, $patronymic) {
+//            $query->where('surname', 'like', '%'.$surname.'%')
+//                ->where('name', 'like', '%'.$name.'%')
+//                ->where('patronymic', 'like', '%'.$patronymic.'%');
+//        })->get(); // Фильтрация сотрудников по ФИО
+//
+//        return new View('site.search', ['filteredEmployees' => $filteredEmployees]);
+//    }
+
+    public function search()
     {
-        $query = $_GET['query']; // Получение значения из параметра запроса
-
-        // Разделение введенного значения на отдельные части ФИО
-        $parts = explode(' ', $query);
-        $surname = $parts[0] ?? ''; // Фамилия
-        $name = $parts[1] ?? ''; // Имя
-        $patronymic = $parts[2] ?? ''; // Отчество
-
-        $filteredEmployees = Employee::where(function($query) use ($surname, $name, $patronymic) {
-            $query->where('surname', 'like', '%'.$surname.'%')
-                ->where('name', 'like', '%'.$name.'%')
-                ->where('patronymic', 'like', '%'.$patronymic.'%');
-        })->get(); // Фильтрация сотрудников по ФИО
+        $search = new Search();
+        $employees = Employee::all();
+        $filteredEmployees = $search->filterModels($employees->toArray(), $_GET['query']);
 
         return new View('site.search', ['filteredEmployees' => $filteredEmployees]);
     }
