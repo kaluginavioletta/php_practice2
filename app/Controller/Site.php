@@ -10,12 +10,12 @@ use Model\Post;
 use Model\Unit;
 use Model\User;
 use Src\View;
-use Src\Request;
 use Src\Validator\Validator;
 use Src\Auth\Auth;
 use Illuminate\Http\UploadedFile;
 use Carbon\Carbon;
 use middlewares;
+use Src\Request;
 class Site
 {
     public function index(Request $request): string
@@ -105,6 +105,18 @@ class Site
             return new View('site.login', ['title' => 'Вход']);
         }
 
+        $validator = new Validator($request->all(), [
+            'login' => ['required'],
+            'password' => ['required']
+        ], [
+            'required' => 'Поле :field пусто'
+        ]);
+
+        if($validator->fails()){
+            return new View('site.login',
+                ['message' => json_encode($validator->errors(), JSON_UNESCAPED_UNICODE)]);
+        }
+
         // Если удалось аутентифицировать пользователя
         if (Auth::attempt($request->all())) {
             $user = Auth::user();
@@ -136,7 +148,7 @@ class Site
                 [
                     'required' => 'Поле :field пустое',
                     'age' => 'Поле :field возраст должен быть от 18 до 65',
-                    'img' => 'Изображение :field большого формата'
+                    'img' => 'Поле :field не хорошего формата или больше 2 Мб'
                 ]);
 
             if ($validator->fails()) {
@@ -144,11 +156,12 @@ class Site
                     ['message' => json_encode($validator->errors(), JSON_UNESCAPED_UNICODE)]);
             }
 
+
             $employees = $request->all();
 
             $employees['check_unit'] = isset($_POST['check_unit']) ? 1 : 0;
 
-            if (!empty($_FILES['img']['name'])) {
+            if ($_FILES['img']) {
                 $img = $_FILES['img'];
                 $root = app()->settings->getRootPath();
                 $path_img = $_SERVER['DOCUMENT_ROOT'] . $root . '/public/images/';
@@ -166,6 +179,7 @@ class Site
                 // Обработка ошибки загрузки файла
                 echo "Ошибка при загрузке файла";
             }
+
         }
 
         $posts = Post::all();

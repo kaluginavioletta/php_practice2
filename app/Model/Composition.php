@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Src\Auth\Auth;
 use Src\Request;
-
 class Composition extends Model
 {
     use HasFactory;

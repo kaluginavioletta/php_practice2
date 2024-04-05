@@ -8,6 +8,7 @@ use FastRoute\RouteCollector;
 use FastRoute\RouteParser\Std;
 use FastRoute\DataGenerator\MarkBased;
 use FastRoute\Dispatcher\MarkBased as Dispatcher;
+use Src\Request;
 use Src\Traits\SingletonTrait;
 
 class Route
@@ -95,7 +96,7 @@ class Route
                 $handler = $routeInfo[1];
                 $vars = array_values($routeInfo[2]);
 //Вызываем обработку всех Middleware
-                $vars[] = Middleware::single()->go($httpMethod, $uri, new Request());
+                $vars[] = Middleware::single()->go($httpMethod, $uri, new \Src\Request());
                 $class = $handler[0];
                 $action = $handler[1];
                 call_user_func([new $class, $action], ...$vars);

@@ -12,8 +12,9 @@ return [
     ],
     'validators' => [
         'required' => Validators\RequireValidator::class,
+        'unique' => Validators\UniqueValidator::class,
         'age' => Validators\AgeValidator::class,
-        'unique' => Validators\UniqueValidator::class
+        'img' => Validators\ImgValidator::class,
     ],
     'routeAppMiddleware' => [
         'csrf' => \Middlewares\CSRFMiddleware::class,

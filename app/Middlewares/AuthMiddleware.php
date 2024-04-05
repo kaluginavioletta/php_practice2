@@ -4,7 +4,6 @@ namespace Middlewares;
 
 use Src\Auth\Auth;
 use Src\Request;
-
 class AuthMiddleware
 {
     public function handle(Request $request)
