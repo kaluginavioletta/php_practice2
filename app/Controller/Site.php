@@ -21,7 +21,6 @@ use Validators\CompositionValidator;
 use Validators\ImgValidator;
 use Validators\UnitValidator;
 use Search\Search;
-
 class Site
 {
     public function index(Request $request): string
@@ -230,15 +229,25 @@ class Site
 //
 //        return new View('site.search', ['filteredEmployees' => $filteredEmployees]);
 //    }
-
-    public function search()
+    public function search(Request $request): string
     {
-        $search = new Search();
-        $employees = Employee::all();
-        $filteredEmployees = $search->filterModels($employees->toArray(), $_GET['query']);
+        $query = $_GET['query']; // Получение значения из параметра запроса
+
+        // Разделение введенного значения на отдельные части ФИО
+        $parts = explode(' ', $query);
+        $surname = $parts[0] ?? ''; // Фамилия
+        $name = $parts[1] ?? ''; // Имя
+        $patronymic = $parts[2] ?? ''; // Отчество
+
+        $filteredEmployees = Employee::where(function($query) use ($surname, $name, $patronymic) {
+            $query->where('surname', 'like', '%'.$surname.'%')
+                ->where('name', 'like', '%'.$name.'%')
+                ->where('patronymic', 'like', '%'.$patronymic.'%');
+        })->get(); // Фильтрация сотрудников по ФИО
 
         return new View('site.search', ['filteredEmployees' => $filteredEmployees]);
     }
+
     public function logout(): void
     {
         Auth::logout();
